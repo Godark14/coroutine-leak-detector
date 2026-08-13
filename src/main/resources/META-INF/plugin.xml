@@ -1,10 +1,10 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>org.jetbrains.plugins.template</id>
-    <name>IntelliJ Platform Plugin Template</name>
-    <vendor>JetBrains</vendor>
+    <id>com.github.godark14.coroutineleakdetector</id>
+    <name>coroutine-leak-detector</name>
+    <vendor>godark14</vendor>
     <description><![CDATA[
-        <p><b>IntelliJ Platform Plugin Template</b> is a repository that provides a pure template to make it easier to create a new plugin project.</p>
+        <p><b>coroutine-leak-detector</b> is a repository that provides a pure template to make it easier to create a new plugin project.</p>
         <p>The main goal of this template is to speed up the setup phase of plugin development for both new and experienced developers by preconfiguring the project scaffold and CI, linking to the proper documentation pages, and keeping everything organized.</p>
     ]]></description>
 
@@ -13,7 +13,7 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="org.jetbrains.plugins.template.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="org.jetbrains.plugins.template.startup.MyProjectActivity" />
+        <toolWindow factoryClass="com.github.godark14.coroutineleakdetector.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <postStartupActivity implementation="com.github.godark14.coroutineleakdetector.startup.MyProjectActivity" />
     </extensions>
 </idea-plugin>
