@@ -1,4 +1,4 @@
-// Déclarations factices pour éviter toute dépendance externe dans le test
+// Fake declarations to avoid any external dependency in the test
 
 interface Flow<T>
 
@@ -7,11 +7,11 @@ fun interface FlowCollector<T> {
 }
 
 fun <T> Flow<T>.collect(action: (T) -> Unit) {
-    // no-op factice
+    // no-op fake
 }
 
 fun <T> Flow<T>.collectLatest(action: (T) -> Unit) {
-    // no-op factice
+    // no-op fake
 }
 
 fun <T> Flow<T>.flowWithLifecycle(dummy: Int): Flow<T> = this
@@ -20,14 +20,14 @@ fun repeatOnLifecycle(state: Int, block: () -> Unit) {
     block()
 }
 
-// Scénario 1 — non protégé, DOIT déclencher le warning
+// Scenario 1 - unprotected, MUST trigger the warning
 fun unsafeCollect(flow: Flow<Int>) {
     flow.<warning descr="Collecting a Flow here may run outside the intended lifecycle and leak. Wrap it with repeatOnLifecycle(Lifecycle.State.STARTED) or use flowWithLifecycle(...).">collect { value ->
         val x = value
     }</warning>
 }
 
-// Scénario 2 — protégé par repeatOnLifecycle, ne DOIT PAS déclencher le warning
+// Scenario 2 - protected by repeatOnLifecycle, must NOT trigger the warning
 fun safeCollectRepeatOnLifecycle(flow: Flow<Int>) {
     repeatOnLifecycle(1) {
         flow.collect { value ->
@@ -36,7 +36,7 @@ fun safeCollectRepeatOnLifecycle(flow: Flow<Int>) {
     }
 }
 
-// Scénario 3 — protégé par flowWithLifecycle chaîné, ne DOIT PAS déclencher le warning
+// Scenario 3 - protected by chained flowWithLifecycle, must NOT trigger the warning
 fun safeCollectFlowWithLifecycle(flow: Flow<Int>) {
     flow.flowWithLifecycle(1).collect { value ->
         val x = value
