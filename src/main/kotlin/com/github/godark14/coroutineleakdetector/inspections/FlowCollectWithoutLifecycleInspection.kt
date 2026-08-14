@@ -24,7 +24,8 @@ class FlowCollectWithoutLifecycleInspection : LocalInspectionTool() {
                     holder.registerProblem(
                         expression,
                         "Collecting a Flow here may run outside the intended lifecycle and leak. " +
-                                "Wrap it with repeatOnLifecycle(Lifecycle.State.STARTED) or use flowWithLifecycle(...)."
+                                "Wrap it with repeatOnLifecycle(Lifecycle.State.STARTED) or use flowWithLifecycle(...).",
+                        ReplaceFlowCollectQuickFix()
                     )
                 }
             }
