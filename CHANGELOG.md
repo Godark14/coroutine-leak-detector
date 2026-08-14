@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+- Inspection: detect `runBlocking` usage that may block the main/UI thread, with a quick fix to add a review TODO
+- Quick fix: insert a migration TODO comment above unsafe `Flow.collect`/`collectLatest` usage
+
 ## [0.1.0] - 2026-08-14
 
 ### Added
