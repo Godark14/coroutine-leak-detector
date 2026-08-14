@@ -9,9 +9,35 @@ plugins {
 dependencies {
     testImplementation("junit:junit:4.13.2")
 
-    // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
-        intellijIdea("2025.2.6.2")
+        androidStudio("2026.1.2.10")
+        bundledPlugin("org.jetbrains.kotlin")
         testFramework(TestFrameworkType.Platform)
+    }
+}
+
+intellijPlatformTesting {
+    runIde {
+        register("runIdeClean") {
+            plugins {
+                disablePlugin("com.google.tools.ij.aiplugin")   // Gemini AI
+                disablePlugin("com.google.services.firebase")   // Firebase
+            }
+        }
+    }
+}
+changelog {
+    version.set("0.1.0")
+    headerParserRegex.set("""(\d+\.\d+\.\d+)""".toRegex())
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
+}
+tasks {
+    patchPluginXml {
+        changeNotes.set(provider {
+            changelog.renderItem(
+                changelog.getUnreleased(),
+                org.jetbrains.changelog.Changelog.OutputType.HTML
+            )
+        })
     }
 }

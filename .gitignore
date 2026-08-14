@@ -4,3 +4,5 @@
 .intellijPlatform
 .kotlin
 build
+local.properties
+*.zip

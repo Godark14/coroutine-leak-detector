@@ -1,19 +1,46 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.godark14.coroutineleakdetector</id>
-    <name>coroutine-leak-detector</name>
-    <vendor>godark14</vendor>
+    <name>Coroutine Leak Detector</name>
+    <vendor email="kgodwinagbe@gmail.com" url="https://github.com/godark14">godark14</vendor>
     <description><![CDATA[
-        <p><b>coroutine-leak-detector</b> is a repository that provides a pure template to make it easier to create a new plugin project.</p>
-        <p>The main goal of this template is to speed up the setup phase of plugin development for both new and experienced developers by preconfiguring the project scaffold and CI, linking to the proper documentation pages, and keeping everything organized.</p>
-    ]]></description>
+    <p><b>Coroutine Leak Detector</b> analyzes Kotlin code in Android projects to catch common coroutine and Flow lifecycle mistakes before they cause memory leaks or crashes in production.</p>
+    <p>Currently detects:</p>
+    <ul>
+        <li><b>GlobalScope misuse</b> — coroutines launched with <code>GlobalScope</code> are never automatically cancelled and can leak.</li>
+        <li><b>Unsafe Flow collection</b> — collecting a <code>Flow</code> without <code>repeatOnLifecycle</code> or <code>flowWithLifecycle</code> can run outside the intended lifecycle.</li>
+    </ul>
+    <p>Each detection comes with a clear explanation and, where possible, a quick fix to guide the migration.</p>
+]]></description>
+    <change-notes><![CDATA[
+    See the full changelog on GitHub.
+]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.kotlin</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.godark14.coroutineleakdetector.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.godark14.coroutineleakdetector.startup.MyProjectActivity" />
+        <localInspection
+            language="kotlin"
+            shortName="GlobalScopeUsage"
+            displayName="GlobalScope usage in coroutines"
+            groupDisplayName="Coroutine Leak Detector"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="com.github.godark14.coroutineleakdetector.inspections.GlobalScopeInspection"/>
+        <localInspection
+            language="kotlin"
+            shortName="FlowCollectWithoutLifecycle"
+            displayName="Flow collection without lifecycle awareness"
+            groupDisplayName="Coroutine Leak Detector"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="com.github.godark14.coroutineleakdetector.inspections.FlowCollectWithoutLifecycleInspection"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportsK2="true"/>
     </extensions>
 </idea-plugin>
