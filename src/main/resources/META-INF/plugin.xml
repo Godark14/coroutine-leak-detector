@@ -38,6 +38,14 @@
             enabledByDefault="true"
             level="WARNING"
             implementationClass="com.github.godark14.coroutineleakdetector.inspections.FlowCollectWithoutLifecycleInspection"/>
+        <localInspection
+            language="kotlin"
+            shortName="RunBlockingUsage"
+            displayName="runBlocking usage that may block the main thread"
+            groupDisplayName="Coroutine Leak Detector"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="com.github.godark14.coroutineleakdetector.inspections.RunBlockingUsageInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
