@@ -1,45 +1,39 @@
-# coroutine-leak-detector
+# Coroutine Leak Detector
 
-![Build](https://github.com/Godark14/coroutine-leak-detector/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+An Android Studio / IntelliJ IDEA plugin that catches common Kotlin coroutine and Flow lifecycle mistakes before they cause memory leaks, crashes, or ANRs in production.
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [group](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml), [name](./src/main/resources/META-INF/plugin.xml), and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin [description](./src/main/resources/META-INF/plugin.xml) (see [Tips][docs:plugin-description]) and this README to describe what your plugin does.
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
+## What it detects
 
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+- **`GlobalScope` misuse** — coroutines launched with `GlobalScope.launch`/`GlobalScope.async` are never automatically cancelled and can leak.
+- **Unsafe Flow collection** — collecting a `Flow` with `collect`/`collectLatest` without `repeatOnLifecycle` or `flowWithLifecycle` can run outside the intended lifecycle.
+- **Risky `runBlocking` usage** — flags `runBlocking` calls, which can block the main/UI thread and cause ANRs if misused in Android UI code.
+
+Each detection includes a clear explanation and a quick fix (`Alt+Enter`) to guide the migration.
 
 ## Installation
 
-- Using the IDE built-in plugin system:
+Currently, the plugin is not yet published on the JetBrains Marketplace. You can install it manually:
 
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "coroutine-leak-detector"</kbd> >
-  <kbd>Install</kbd>
+1. Clone this repository
+2. Run `./gradlew buildPlugin`
+3. In Android Studio: `Settings/Preferences` > `Plugins` > `⚙️` > `Install Plugin from Disk...`
+4. Select the generated `.zip` file from `build/distributions/`
+5. Restart Android Studio
 
-- Using JetBrains Marketplace:
+## Development
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
+This project uses the [IntelliJ Platform Gradle Plugin](https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html).
 
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+- `./gradlew build` — compile and run tests
+- `./gradlew test` — run tests only
+- `./gradlew runIde` — launch a sandbox Android Studio instance with the plugin installed
+- `./gradlew buildPlugin` — generate the distributable `.zip`
 
-- Manually:
+See [CHANGELOG.md](./CHANGELOG.md) for release history.
 
-  Download the [latest release](https://github.com/Godark14/coroutine-leak-detector/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+## Contributing
 
+Issues and pull requests are welcome.
 
----
-Plugin based on the [IntelliJ Platform Plugin Template][template].
-
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+## License
+MIT
