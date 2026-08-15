@@ -27,11 +27,19 @@ class FlowCollectWithoutLifecycleInspection : LocalInspectionTool() {
                 if (isInTestSources(expression)) return
                 if (!isAndroidLifecycleLibraryAvailable(expression)) return
 
+                val suggestedScope = ScopeContextDetector.detect(expression)
+                val quickFix = when (suggestedScope) {
+                    ScopeContextDetector.SuggestedScope.LIFECYCLE_OWNER ->
+                        WrapWithRepeatOnLifecycleQuickFix()
+                    else ->
+                        ReplaceFlowCollectQuickFix()
+                }
+
                 holder.registerProblem(
                     expression,
                     "Collecting a Flow here may run outside the intended lifecycle and leak. " +
                             "Wrap it with repeatOnLifecycle(Lifecycle.State.STARTED) or use flowWithLifecycle(...).",
-                    ReplaceFlowCollectQuickFix()
+                    quickFix
                 )
             }
         }
@@ -57,21 +65,11 @@ class FlowCollectWithoutLifecycleInspection : LocalInspectionTool() {
         return false
     }
 
-    /**
-     * Skip inspection entirely for test sources: lifecycle-awareness concerns
-     * are much less relevant (and often noisy/false-positive) in unit or
-     * instrumented tests.
-     */
     private fun isInTestSources(expression: KtCallExpression): Boolean {
         val virtualFile = expression.containingFile.virtualFile ?: return false
         return TestSourcesFilter.isTestSources(virtualFile, expression.project)
     }
 
-    /**
-     * Skip inspection if the module doesn't even have the Android Lifecycle
-     * library on its classpath (e.g. a pure Kotlin/JVM backend module).
-     * Suggesting repeatOnLifecycle/flowWithLifecycle wouldn't make sense there.
-     */
     private fun isAndroidLifecycleLibraryAvailable(expression: KtCallExpression): Boolean {
         val project = expression.project
         val scope = GlobalSearchScope.allScope(project)

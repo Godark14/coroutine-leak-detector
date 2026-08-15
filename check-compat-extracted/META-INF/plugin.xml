@@ -1,0 +1,35 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <idea-version since-build="261" />
+  <version>0.0.2</version>
+  <id>com.github.godark14.coroutineleakdetector</id>
+  <name>Coroutine Leak Detector</name>
+  <vendor email="kgodwinagbe@gmail.com" url="https://github.com/godark14">godark14</vendor>
+  <description><![CDATA[<p><b>Coroutine Leak Detector</b> analyzes Kotlin code in Android projects to catch common coroutine and Flow lifecycle mistakes before they cause memory leaks or crashes in production.</p>
+    <p>Currently detects:</p>
+    <ul>
+        <li><b>GlobalScope misuse</b> — coroutines launched with <code>GlobalScope</code> are never automatically cancelled and can leak.</li>
+        <li><b>Unsafe Flow collection</b> — collecting a <code>Flow</code> without <code>repeatOnLifecycle</code> or <code>flowWithLifecycle</code> can run outside the intended lifecycle.</li>
+    </ul>
+    <p>Each detection comes with a clear explanation and, where possible, a quick fix to guide the migration.</p>]]></description>
+  <change-notes><![CDATA[<h2><a href="https://github.com/Godark14/coroutine-leak-detector/compare/0.1.0...HEAD">Unreleased</a></h2>
+
+<h3>Added</h3>
+
+<ul><li>Inspection: detect <code>runBlocking</code> usage that may block the main/UI thread, with a quick fix to add a review TODO</li><li>Quick fix: insert a migration TODO comment above unsafe <code>Flow.collect</code>/<code>collectLatest</code> usage</li></ul>
+
+<h3>Changed</h3>
+
+<ul><li>Quick fix: <code>GlobalScope</code> inspection now suggests a direct replacement (<code>viewModelScope</code> or <code>lifecycleScope</code>) when the surrounding class context is detected, falling back to a TODO comment otherwise</li><li>Inspection: <code>FlowCollectWithoutLifecycle</code> now skips test sources and modules without the Android Lifecycle library on the classpath, reducing false positives</li></ul>]]></change-notes>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>org.jetbrains.kotlin</depends>
+  <resource-bundle>messages.MyBundle</resource-bundle>
+  <extensions defaultExtensionNs="com.intellij">
+    <localInspection language="kotlin" shortName="GlobalScopeUsage" displayName="GlobalScope usage in coroutines" groupDisplayName="Coroutine Leak Detector" enabledByDefault="true" level="WARNING" implementationClass="com.github.godark14.coroutineleakdetector.inspections.GlobalScopeInspection" />
+    <localInspection language="kotlin" shortName="FlowCollectWithoutLifecycle" displayName="Flow collection without lifecycle awareness" groupDisplayName="Coroutine Leak Detector" enabledByDefault="true" level="WARNING" implementationClass="com.github.godark14.coroutineleakdetector.inspections.FlowCollectWithoutLifecycleInspection" />
+    <localInspection language="kotlin" shortName="RunBlockingUsage" displayName="runBlocking usage that may block the main thread" groupDisplayName="Coroutine Leak Detector" enabledByDefault="true" level="WARNING" implementationClass="com.github.godark14.coroutineleakdetector.inspections.RunBlockingUsageInspection" />
+  </extensions>
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <supportsKotlinPluginMode supportsK2="true" />
+  </extensions>
+</idea-plugin>
