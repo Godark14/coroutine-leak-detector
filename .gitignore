@@ -8,3 +8,5 @@ local.properties
 *.zip
 *.pem
 *.crt
+chain_base64.txt
+private_base64.txt
