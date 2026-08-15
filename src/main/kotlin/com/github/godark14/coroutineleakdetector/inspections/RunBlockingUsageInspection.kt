@@ -15,13 +15,25 @@ class RunBlockingUsageInspection : LocalInspectionTool() {
                 val calleeName = expression.calleeExpression?.text ?: return
                 if (calleeName != "runBlocking") return
 
+                val suggestedScope = ScopeContextDetector.detect(expression)
+                val isLikelyUiCode = suggestedScope != ScopeContextDetector.SuggestedScope.NONE
+
+                val message = if (isLikelyUiCode) {
+                    "runBlocking blocks the calling thread until its coroutine completes. " +
+                            "This code is inside a UI-related class (${suggestedScope.replacement}-eligible), " +
+                            "so this call likely runs on the main thread and can cause ANRs. " +
+                            "Prefer launch/async with ${suggestedScope.replacement} instead."
+                } else {
+                    "runBlocking blocks the calling thread until its coroutine completes. " +
+                            "If this runs on the main/UI thread, it can cause ANRs. " +
+                            "It is generally safe in main() entry points or tests, " +
+                            "but prefer launch/async with a proper CoroutineScope in Android UI code."
+                }
+
                 holder.registerProblem(
                     expression,
-                    "runBlocking blocks the calling thread until its coroutine completes. " +
-                            "If this runs on the main/UI thread (e.g. in an Activity, Fragment, or click listener), " +
-                            "it can cause ANRs. It is generally safe in main() entry points or tests, " +
-                            "but prefer launch/async with a proper CoroutineScope in Android UI code.",
-                    ReplaceRunBlockingQuickFix()
+                    message,
+                    ReplaceRunBlockingQuickFix(isLikelyUiCode, suggestedScope.replacement)
                 )
             }
         }
