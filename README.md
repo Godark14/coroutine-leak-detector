@@ -8,7 +8,17 @@ An Android Studio / IntelliJ IDEA plugin that catches common Kotlin coroutine an
 - **Unsafe Flow collection** — collecting a `Flow` with `collect`/`collectLatest` without `repeatOnLifecycle` or `flowWithLifecycle` can run outside the intended lifecycle.
 - **Risky `runBlocking` usage** — flags `runBlocking` calls, which can block the main/UI thread and cause ANRs if misused in Android UI code.
 
-Each detection includes a clear explanation and a quick fix (`Alt+Enter`) to guide the migration.
+## Smart, context-aware quick fixes
+
+Each detection comes with a quick fix (`Alt+Enter`). When the plugin can determine the surrounding class context (`ViewModel`, `Fragment`, `Activity`), it goes beyond a simple TODO comment:
+
+| Inspection | Inside `ViewModel` | Inside `Fragment`/`Activity` | Elsewhere |
+|---|---|---|---|
+| `GlobalScope` | Replaces with `viewModelScope` directly | Replaces with `lifecycleScope` directly | Adds a migration TODO |
+| `Flow.collect` | — | Wraps with `repeatOnLifecycle(Lifecycle.State.STARTED) { ... }` directly | Adds a migration TODO |
+| `runBlocking` | TODO suggesting `viewModelScope` | TODO suggesting `lifecycleScope` | Generic review TODO |
+
+The `Flow.collect` and `runBlocking` inspections also skip test sources and modules that don't have the Android Lifecycle library on the classpath, to avoid false positives outside Android UI code.
 
 ## Installation
 
