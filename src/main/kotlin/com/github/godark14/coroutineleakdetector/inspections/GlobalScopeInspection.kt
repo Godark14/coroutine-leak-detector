@@ -18,10 +18,20 @@ class GlobalScopeInspection : LocalInspectionTool() {
                 if (receiverText == "GlobalScope" &&
                     (selectorText.startsWith("launch") || selectorText.startsWith("async"))
                 ) {
+                    val suggestedScope = ScopeContextDetector.detect(expression)
+
+                    val quickFix = when (suggestedScope) {
+                        ScopeContextDetector.SuggestedScope.VIEW_MODEL,
+                        ScopeContextDetector.SuggestedScope.LIFECYCLE_OWNER ->
+                            ReplaceGlobalScopeWithLifecycleAwareScopeQuickFix(suggestedScope.replacement)
+                        ScopeContextDetector.SuggestedScope.NONE ->
+                            ReplaceGlobalScopeQuickFix()
+                    }
+
                     holder.registerProblem(
                         expression,
                         "Avoid using GlobalScope: this coroutine is never cancelled automatically and can leak. Prefer a lifecycle-aware scope (viewModelScope, lifecycleScope) or a custom CoroutineScope you cancel explicitly.",
-                        ReplaceGlobalScopeQuickFix()
+                        quickFix
                     )
                 }
             }
