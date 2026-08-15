@@ -8,6 +8,10 @@ class FlowCollectWithoutLifecycleInspectionTest : BasePlatformTestCase() {
 
     fun testFlowCollectWithoutLifecycle() {
         myFixture.enableInspections(FlowCollectWithoutLifecycleInspection::class.java)
-        myFixture.testHighlighting(true, false, false, "FlowCollectWithoutLifecycle.kt")
+        myFixture.configureByFiles(
+            "FlowCollectWithoutLifecycle.kt",
+            "androidx/lifecycle/Lifecycle.kt"
+        )
+        myFixture.checkHighlighting(true, false, false)
     }
 }
