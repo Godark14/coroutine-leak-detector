@@ -19,7 +19,6 @@ dependencyResolutionManagement {
     // Configure all projects' repositories
     repositories {
         mavenCentral()
-
         // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
         intellijPlatform {
             defaultRepositories()
