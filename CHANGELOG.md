@@ -10,6 +10,7 @@
 ### Changed
 
 - Quick fix: `GlobalScope` inspection now suggests a direct replacement (`viewModelScope` or `lifecycleScope`) when the surrounding class context is detected, falling back to a TODO comment otherwise
+- Inspection: `FlowCollectWithoutLifecycle` now skips test sources and modules without the Android Lifecycle library on the classpath, reducing false positives
 
 ## [0.1.0] - 2026-08-14
 
