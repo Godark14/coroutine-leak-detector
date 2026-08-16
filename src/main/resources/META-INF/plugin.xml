@@ -46,6 +46,14 @@
             enabledByDefault="true"
             level="WARNING"
             implementationClass="com.github.godark14.coroutineleakdetector.inspections.RunBlockingUsageInspection"/>
+        <localInspection
+            language="kotlin"
+            shortName="UnusedDeferredResult"
+            displayName="Unused async result (Deferred never awaited)"
+            groupDisplayName="Coroutine Leak Detector"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="com.github.godark14.coroutineleakdetector.inspections.UnusedDeferredResultInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
