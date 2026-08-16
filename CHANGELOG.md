@@ -6,6 +6,7 @@
 
 - Inspection: detect `runBlocking` usage that may block the main/UI thread, with a quick fix to add a review TODO
 - Quick fix: insert a migration TODO comment above unsafe `Flow.collect`/`collectLatest` usage
+- Inspection: detect `async { }` calls whose result (`Deferred`) is never used, which can silently swallow exceptions, with a quick fix to replace with `launch { }`
 
 ### Changed
 
