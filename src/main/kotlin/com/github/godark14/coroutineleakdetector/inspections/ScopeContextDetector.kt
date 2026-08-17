@@ -11,10 +11,10 @@ object ScopeContextDetector {
         "Fragment", "AppCompatActivity", "ComponentActivity", "FragmentActivity"
     )
 
-    enum class SuggestedScope(val replacement: String) {
-        VIEW_MODEL("viewModelScope"),
-        LIFECYCLE_OWNER("lifecycleScope"),
-        NONE("")
+    enum class SuggestedScope(val replacement: String, val cleanupMethodName: String) {
+        VIEW_MODEL("viewModelScope", "onCleared"),
+        LIFECYCLE_OWNER("lifecycleScope", "onDestroy"),
+        NONE("", "")
     }
 
     fun detect(element: KtElement): SuggestedScope {
@@ -22,6 +22,10 @@ object ScopeContextDetector {
             .filterIsInstance<KtClass>()
             .firstOrNull() ?: return SuggestedScope.NONE
 
+        return detectForClass(containingClass)
+    }
+
+    fun detectForClass(containingClass: KtClass): SuggestedScope {
         val superNames = containingClass.superTypeListEntries
             .mapNotNull { it.typeReference?.text }
 
