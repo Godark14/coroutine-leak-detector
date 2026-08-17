@@ -62,6 +62,14 @@
             enabledByDefault="true"
             level="WARNING"
             implementationClass="com.github.godark14.coroutineleakdetector.inspections.UncancelledScopeInspection"/>
+        <localInspection
+            language="kotlin"
+            shortName="HardcodedDispatcher"
+            displayName="Hardcoded Dispatchers usage instead of injected dispatcher"
+            groupDisplayName="Coroutine Leak Detector"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="com.github.godark14.coroutineleakdetector.inspections.HardcodedDispatcherInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
