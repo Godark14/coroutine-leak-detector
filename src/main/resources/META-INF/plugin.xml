@@ -54,6 +54,14 @@
             enabledByDefault="true"
             level="WARNING"
             implementationClass="com.github.godark14.coroutineleakdetector.inspections.UnusedDeferredResultInspection"/>
+        <localInspection
+            language="kotlin"
+            shortName="UncancelledScope"
+            displayName="Coroutine scope/Job created without cancellation on cleanup"
+            groupDisplayName="Coroutine Leak Detector"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="com.github.godark14.coroutineleakdetector.inspections.UncancelledScopeInspection"/>
     </extensions>
 
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
