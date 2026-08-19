@@ -10,3 +10,5 @@ local.properties
 *.crt
 chain_base64.txt
 private_base64.txt
+*-extracted/
+*.class
