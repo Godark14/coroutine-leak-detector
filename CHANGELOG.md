@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-19
+
 ### Added
 
 - Inspection: detect `runBlocking` usage that may block the main/UI thread, with a quick fix to add a review TODO
@@ -17,7 +19,7 @@
 - Quick fix: `FlowCollectWithoutLifecycle` inspection now suggests wrapping with `repeatOnLifecycle(Lifecycle.State.STARTED)` directly when inside a `Fragment`/`Activity` context, falling back to a TODO comment otherwise
 - Quick fix: `runBlocking` inspection now suggests a specific replacement (`viewModelScope` or `lifecycleScope`) in its TODO message when the surrounding class context is detected
 
-## [0.1.0] - 2026-08-14
+## [0.0.2] - 2026-08-14
 
 ### Added
 
